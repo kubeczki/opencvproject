@@ -27,13 +27,15 @@ def anonymize_face_simple(queue, factor=3.0):
 # call blur function
 
 # store the blurred face in the output image
-def display(queue):
+def display(queue, faces_queue):
     # create window
     cv2.namedWindow('image_display', cv2.WINDOW_AUTOSIZE)
     while True:
-        if queue.empty() is False:
-            image = queue.get()
-            cv2.imshow('image_display', image)
+        image = queue.get()
+        faces = faces_queue.get()
+        for (x, y, w, h) in faces:
+            cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv2.imshow('image_display', image)
 
         k = cv2.waitKey(30) & 0xff
         if k == 27:
