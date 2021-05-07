@@ -1,6 +1,7 @@
 import cv2
 
 
+# face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 # Convert to grayscale
 # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 # Detect the faces
