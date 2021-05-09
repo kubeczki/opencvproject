@@ -12,7 +12,7 @@ def choose_system_version(version):
     elif version == "sam":
         system_sampling()
     else:
-        print("Unrecognized version. Try std or alt")
+        print("Unrecognized version. Try std, alt or par")
 
 
 if __name__ == '__main__':
