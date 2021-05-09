@@ -8,7 +8,7 @@ import sys
 
 
 def system_std():
-    raw_input_queue = mp.Queue(1)
+    raw_input_queue = mp.Queue()
     processed_queue = mp.Queue()
     faces_queue = mp.Queue()
 

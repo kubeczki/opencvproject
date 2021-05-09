@@ -6,6 +6,7 @@ import cv2
 import time
 import sys
 
+
 def system_alt():
     # producer - detector pipe
     raw_image_pipe_in, raw_image_pipe_out = mp.Pipe()
