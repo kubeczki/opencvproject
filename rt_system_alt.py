@@ -7,19 +7,25 @@ import time
 import sys
 
 def system_alt():
-    in_conn_display_pipe, out_conn_display_pipe = mp.Pipe()
-    in_conn_detect_pipe, out_conn_detect_pipe = mp.Pipe()
-    in_conn_faces_pipe, out_conn_faces_pipe = mp.Pipe()
-    det_ready_mutex = mp.Lock()
-    face_ready_mutex = mp.Lock()
+    # producer - detector pipe
+    raw_image_pipe_in, raw_image_pipe_out = mp.Pipe()
+    # detector - displayer image pipe
+    processed_image_pipe_in, processed_image_pipe_out = mp.Pipe()
+    # detector - displayer faces locations pipe
+    faces_in, faces_out = mp.Pipe()
 
     producer = mp.Process(target=produce_data_alt, args=(in_conn_display_pipe, in_conn_detect_pipe, det_ready_mutex, ))
     producer.start()
 
-    detector = mp.Process(target=detect_faces_alt, args=(out_conn_detect_pipe, in_conn_faces_pipe, det_ready_mutex, face_ready_mutex, ))
+    detector = mp.Process(target=detect_faces_alt, args=(raw_image_pipe_out, processed_image_pipe_in, faces_in,))
+    detector.start()
 
     displayer = mp.Process(target=display_alt, args=(out_conn_display_pipe, out_conn_faces_pipe, face_ready_mutex, ))
     displayer.start()
+
+    producer.join()
+    detector.join()
+    displayer.join()
 
     k = cv2.waitKey(30) & 0xff
     if k == 27:

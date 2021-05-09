@@ -22,7 +22,7 @@ def produce_data(queue):
     # call this when we stop using the camera
 
 
-def produce_data_alt(display_connection, detection_connection, detection_mutex):
+def produce_data_alt(raw_image_pipe_in):
     # To capture video from webcam.
     cap = cv2.VideoCapture(0)
 
@@ -38,7 +38,7 @@ def produce_data_alt(display_connection, detection_connection, detection_mutex):
         if k == 27:
             break
 
-    display_connection.close()
+    raw_image_pipe_in.close()
     # Release the VideoCapture object
     cap.release()
     # call this when we stop using the camera

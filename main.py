@@ -13,9 +13,9 @@ def choose_system_version(version):
 
 
 if __name__ == '__main__':
+
     sys_version = sys.argv[1]
 
     choose_system_version(sys_version)
-    # system_alt()
-    # system_std()
+
     sys.exit()

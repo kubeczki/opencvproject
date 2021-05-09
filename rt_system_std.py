@@ -15,15 +15,15 @@ def system_std():
     producer = mp.Process(target=produce_data, args=(raw_input_queue,))
     producer.start()
 
-    # detector = mp.Process(target=detect_faces, args=(raw_input_queue, processed_queue, faces_queue, ))
-    # detector.start()
+    detector = mp.Process(target=detect_faces, args=(raw_input_queue, processed_queue, faces_queue, ))
+    detector.start()
 
     displayer = mp.Process(target=display, args=(raw_input_queue, faces_queue,))
     displayer.start()
 
-    # producer.join()
-    # detector.join()
-    # displayer.join()
+    producer.join()
+    detector.join()
+    displayer.join()
 
     # k = cv2.waitKey(30) & 0xff
     # if k == 27:
