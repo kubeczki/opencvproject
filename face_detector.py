@@ -21,3 +21,8 @@ def detect_faces(in_queue, out_queue, faces_queue):
 
 def detect_faces_alt(detection_connection, faces_connection, detection_mutex, faces_mutex):
     faceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
+    while True:
+        k = cv2.waitKey(30) & 0xff
+        if k == 27:
+            break
