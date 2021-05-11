@@ -116,12 +116,13 @@ def modify_alt(processed_image_pipe_out, faces_pipe_out, time_control_pipe_out):
             break
         elif k == 32:
             mode *= -1
+
+        process_duration = time.time() - process_start
+        log_process_duration("modify_alt", process_duration)
+
     time_control_pipe_out.close()
     processed_image_pipe_out.close()
     faces_pipe_out.close()
-
-    process_duration = time.time() - process_start
-    log_process_duration("modify_alt", process_duration)
 
 
 def modify_samp(queue, faces_queue, time_control_queue):

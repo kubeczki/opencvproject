@@ -45,12 +45,12 @@ def detect_faces_alt(raw_image_pipe_out, processed_image_pipe_in, faces_pipe_in)
         if k == 27:
             break
 
+        process_duration = time.time() - process_start
+        log_process_duration("detect_faces_alt", process_duration)
+
     raw_image_pipe_out.close()
     processed_image_pipe_in.close()
     faces_pipe_in.close()
-
-    process_duration = time.time() - process_start
-    log_process_duration("detect_faces_alt", process_duration)
 
 
 def detect_faces_samp(queue, faces_queue, sampling_step):
