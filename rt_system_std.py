@@ -1,31 +1,25 @@
 import multiprocessing as mp
-from data_producer import produce_data
-from image_modifier import modify
-from face_detector import detect_faces
-import cv2
-import time
-import sys
+from data_producer import produce_data_std
+from image_modifier import modify_std
+from face_detector import detect_faces_std
 
 
-def system_std():
-    raw_input_queue = mp.Queue()
-    processed_queue = mp.Queue()
-    faces_queue = mp.Queue()
+def system_std(file_name):
+    raw_input_queue = mp.Queue(1)
+    processed_queue = mp.Queue(1)
+    faces_queue = mp.Queue(1)
+    time_control = mp.Queue(2)
 
-    producer = mp.Process(target=produce_data, args=(raw_input_queue,))
+    producer = mp.Process(target=produce_data_std, args=(raw_input_queue, time_control, file_name, ))
     producer.start()
 
-    detector = mp.Process(target=detect_faces, args=(raw_input_queue, processed_queue, faces_queue, ))
+    detector = mp.Process(target=detect_faces_std, args=(raw_input_queue, processed_queue, faces_queue, ))
     detector.start()
 
-    displayer = mp.Process(target=modify, args=(raw_input_queue, faces_queue,))
+    displayer = mp.Process(target=modify_std, args=(processed_queue, faces_queue, time_control, ))
     displayer.start()
 
     producer.join()
     detector.join()
     displayer.join()
 
-    k = cv2.waitKey(1) & 0xff
-    if k == 27:
-        sys.exit()
-    return 0
