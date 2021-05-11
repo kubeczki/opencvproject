@@ -5,10 +5,10 @@ from face_detector import detect_faces_std
 
 
 def system_std(file_name):
-    raw_input_queue = mp.Queue(1)
-    processed_queue = mp.Queue(1)
-    faces_queue = mp.Queue(1)
-    time_control = mp.Queue(2)
+    raw_input_queue = mp.Queue()
+    processed_queue = mp.Queue()
+    faces_queue = mp.Queue()
+    time_control = mp.Queue()
 
     producer = mp.Process(target=produce_data_std, args=(raw_input_queue, time_control, file_name, ))
     producer.start()
