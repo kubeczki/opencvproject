@@ -27,6 +27,3 @@ def system_alt(file_name):
     detector.join()
     displayer.join()
 
-    k = cv2.waitKey(1) & 0xff
-    if k == 27:
-        sys.exit()

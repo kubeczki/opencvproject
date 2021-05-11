@@ -6,6 +6,7 @@ from logger import log, log_process_duration
 def detect_faces_std(in_queue, out_queue, faces_queue):
     faceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     while True:
+        process_start = time.time()
         image = in_queue.get()
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         faces = faceCascade.detectMultiScale(
@@ -15,6 +16,8 @@ def detect_faces_std(in_queue, out_queue, faces_queue):
         )
         faces_queue.put(faces)
         out_queue.put(image)
+        log(time.asctime(), "detect_faces_std;", "Face detection on frame completed")
+
         k = cv2.waitKey(1) & 0xff
         if k == 27:
             break
@@ -26,6 +29,7 @@ def detect_faces_std(in_queue, out_queue, faces_queue):
 def detect_faces_alt(raw_image_pipe_out, processed_image_pipe_in, faces_pipe_in):
     faceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     while True:
+        process_start = time.time()
         image = raw_image_pipe_out.recv()
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         faces = faceCascade.detectMultiScale(
@@ -35,6 +39,7 @@ def detect_faces_alt(raw_image_pipe_out, processed_image_pipe_in, faces_pipe_in)
         )
         faces_pipe_in.send(faces)
         processed_image_pipe_in.send(image)
+        log(time.asctime(), "detect_faces_alt;", "Face detection on frame completed")
 
         k = cv2.waitKey(1) & 0xff
         if k == 27:
@@ -43,6 +48,9 @@ def detect_faces_alt(raw_image_pipe_out, processed_image_pipe_in, faces_pipe_in)
     raw_image_pipe_out.close()
     processed_image_pipe_in.close()
     faces_pipe_in.close()
+
+    process_duration = time.time() - process_start
+    log_process_duration("detect_faces_alt", process_duration)
 
 
 def detect_faces_samp(queue, faces_queue, sampling_step):
@@ -66,3 +74,6 @@ def detect_faces_samp(queue, faces_queue, sampling_step):
         k = cv2.waitKey(1) & 0xff
         if k == 27:
             break
+
+        process_duration = time.time() - process_start
+        log_process_duration("detect_faces_samp", process_duration)

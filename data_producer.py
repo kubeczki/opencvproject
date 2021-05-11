@@ -10,6 +10,7 @@ def produce_data_std(queue, time_control_queue, filename):
         cap = cv2.VideoCapture(filename)
 
     while True:
+        process_start = time.time()
         # Read the frame
         valid, img = cap.read()
         if not valid:
@@ -26,6 +27,9 @@ def produce_data_std(queue, time_control_queue, filename):
         if k == 27:
             break
 
+        process_duration = time.time() - process_start
+        log_process_duration("produce_data_std", process_duration)
+
     # Release the VideoCapture object
     cap.release()
     # call this when we stop using the camera
@@ -38,6 +42,7 @@ def produce_data_alt(raw_image_pipe_in, time_control_pipe_in, filename):
         cap = cv2.VideoCapture(filename)
 
     while True:
+        process_start = time.time()
         # Read the frame
         valid, img = cap.read()
         if not valid:
@@ -54,6 +59,9 @@ def produce_data_alt(raw_image_pipe_in, time_control_pipe_in, filename):
         if k == 27:
             break
 
+        process_duration = time.time() - process_start
+        log_process_duration("produce_data_alt", process_duration)
+
     raw_image_pipe_in.close()
     time_control_pipe_in.close()
     # Release the VideoCapture object
@@ -68,6 +76,7 @@ def produce_data_samp(raw_input_queue, detection_queue, time_control_queue, file
         cap = cv2.VideoCapture(filename)
 
     while True:
+        process_start = time.time()
         # Read the frame
         valid, img = cap.read()
         if not valid:
@@ -84,6 +93,9 @@ def produce_data_samp(raw_input_queue, detection_queue, time_control_queue, file
         k = cv2.waitKey(1) & 0xff
         if k == 27:
             break
+
+        process_duration = time.time() - process_start
+        log_process_duration("produce_data_samp", process_duration)
 
     # Release the VideoCapture object
     cap.release()

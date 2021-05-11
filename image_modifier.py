@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 import time
 from PIL import Image
+from logger import log, log_delay, log_process_duration
 
 
 def cv2_to_pil(image):
@@ -33,13 +34,14 @@ def blur_fragment(image, x, y, w, h):
 def modify_std(queue, faces_queue, time_queue):
     # create window
     cv2.namedWindow('image_display', cv2.WINDOW_AUTOSIZE)
-    mode = 1
     start_time = time.time()
+    mode = 1
     number_of_seconds = 1
     frame_number = 0
     counter = 0
     fps = "FPS: "
     while True:
+        process_start = time.time()
         image = queue.get()
         faces = faces_queue.get()
         for (x, y, w, h) in faces:
@@ -70,17 +72,21 @@ def modify_std(queue, faces_queue, time_queue):
         elif k == 32:
             mode *= -1
 
+        process_duration = time.time() - process_start
+        log_process_duration("modify_std", process_duration)
+
 
 def modify_alt(processed_image_pipe_out, faces_pipe_out, time_control_pipe_out):
     # create window
     cv2.namedWindow('image_display', cv2.WINDOW_AUTOSIZE)
-    mode = 1
     start_time = time.time()
+    mode = 1
     number_of_seconds = 1
     counter = 0
     frame_number = 0
     fps = "FPS: "
     while True:
+        process_start = time.time()
         image = processed_image_pipe_out.recv()
         faces = faces_pipe_out.recv()
         for (x, y, w, h) in faces:
@@ -114,11 +120,15 @@ def modify_alt(processed_image_pipe_out, faces_pipe_out, time_control_pipe_out):
     processed_image_pipe_out.close()
     faces_pipe_out.close()
 
+    process_duration = time.time() - process_start
+    log_process_duration("modify_alt", process_duration)
+
+
 def modify_samp(queue, faces_queue, time_control_queue):
     # create window
     cv2.namedWindow('image_display', cv2.WINDOW_AUTOSIZE)
-    mode = 1
     start_time = time.time()
+    mode = 1
     number_of_seconds = 1
     counter = 0
     frame_number = 0
