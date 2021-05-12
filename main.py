@@ -7,21 +7,34 @@ from logger import log
 
 
 def choose_system_version(version, file_name):
+    resolution_number = int(input("Choose preferred resolution: \n1. 720p\n2. 480p\n3. 360p\n4. 144p\n"))
+    if resolution_number == 1:
+        resolution = [1280, 720]
+    elif resolution_number == 2:
+        resolution = [640, 480]
+    elif resolution_number == 3:
+        resolution = [480, 360]
+    elif resolution_number == 4:
+        resolution = [256, 144]
+    else:
+        print("Wrong input, default resolution chosen (720p)")
+        resolution = [1280, 720]
+
     if version == "std":
         log(time.asctime(), "choose_system_version;", "Standard version has been activated")
         log(time.asctime(), "choose_system_version;", "Standard version has been activated", "Delay.txt")
         log(time.asctime(), "choose_system_version;", "Standard version has been activated", "Process Duration.txt")
-        system_std(file_name)
+        system_std(file_name, resolution)
     elif version == "alt":
         log(time.asctime(), "choose_system_version;", "Alternate version has been activated")
         log(time.asctime(), "choose_system_version;", "Alternate version has been activated", "Delay.txt")
         log(time.asctime(), "choose_system_version;", "Alternate version has been activated", "Process Duration.txt")
-        system_alt(file_name)
+        system_alt(file_name, resolution)
     elif version == "par":
         log(time.asctime(), "choose_system_version;", "Parallel version has been activated")
         log(time.asctime(), "choose_system_version;", "Parallel version has been activated", "Delay.txt")
         log(time.asctime(), "choose_system_version;", "Parallel version has been activated", "Process Duration.txt")
-        system_sampling(1, file_name)
+        system_sampling(1, file_name, resolution)
     elif version == "samp":
         while True:
             try:
@@ -30,7 +43,7 @@ def choose_system_version(version, file_name):
                     log(time.asctime(), "choose_system_version;", "Sampling version has been activated")
                     log(time.asctime(), "choose_system_version;", "Sampling version has been activated", "Delay.txt")
                     log(time.asctime(), "choose_system_version;", "Sampling version has been activated", "Process Duration.txt")
-                    system_sampling(sampling_step, file_name)
+                    system_sampling(sampling_step, file_name, resolution)
                     break
             except:
                 print("Sampling step must be a positive integer!")

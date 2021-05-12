@@ -4,7 +4,7 @@ from image_modifier import modify_alt
 from face_detector import detect_faces_alt
 
 
-def system_alt(file_name):
+def system_alt(file_name, resolution):
     # producer - detector pipe
     raw_image_pipe_in, raw_image_pipe_out = mp.Pipe()
     # detector - displayer image pipe
@@ -14,7 +14,7 @@ def system_alt(file_name):
     # producer - displayer time pipe
     time_control_pipe_in, time_control_pipe_out = mp.Pipe()
 
-    producer = mp.Process(target=produce_data_alt, args=(raw_image_pipe_in, time_control_pipe_in, file_name, ))
+    producer = mp.Process(target=produce_data_alt, args=(raw_image_pipe_in, time_control_pipe_in, file_name, resolution, ))
     producer.start()
 
     detector = mp.Process(target=detect_faces_alt, args=(raw_image_pipe_out, processed_image_pipe_in, faces_in,))

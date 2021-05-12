@@ -1,13 +1,20 @@
 import cv2
+import cv2.cv2 as cv
 import time
 from logger import log, log_process_duration
 
 
-def produce_data_std(queue, time_control_queue, filename):
+def produce_data_std(queue, time_control_queue, filename, resolution):
     if filename == "no_filename":
         cap = cv2.VideoCapture(0)
     else:
         cap = cv2.VideoCapture(filename)
+
+        print(cv2.VideoCapture.get(3))
+        print(cv2.VideoCapture.get(4))
+
+        cap.set(3, resolution[0])
+        cap.set(4, resolution[1])
 
     while True:
         process_start = time.time()
@@ -20,7 +27,7 @@ def produce_data_std(queue, time_control_queue, filename):
         time_control_queue.put(time.time())
         queue.put(img)
         log(time.asctime(), "produce_data_std;", "Raw image has been captured and stored")
-        time.sleep(0.1)
+        # time.sleep(0.1)
 
         # Stop if escape key is pressed
         k = cv2.waitKey(1) & 0xff
@@ -35,11 +42,14 @@ def produce_data_std(queue, time_control_queue, filename):
     # call this when we stop using the camera
 
 
-def produce_data_alt(raw_image_pipe_in, time_control_pipe_in, filename):
+def produce_data_alt(raw_image_pipe_in, time_control_pipe_in, filename, resolution):
     if filename == "no_filename":
         cap = cv2.VideoCapture(0)
     else:
         cap = cv2.VideoCapture(filename)
+
+        cap.set(3, resolution[0])
+        cap.set(4, resolution[1])
 
     while True:
         process_start = time.time()
@@ -52,7 +62,7 @@ def produce_data_alt(raw_image_pipe_in, time_control_pipe_in, filename):
         time_control_pipe_in.send(time.time())
         raw_image_pipe_in.send(img)
         log(time.asctime(), "produce_data_alt;", "Raw image has been captured and stored")
-        time.sleep(0.010)
+        # time.sleep(0.010)
 
         # Stop if escape key is pressed
         k = cv2.waitKey(1) & 0xff
@@ -69,11 +79,14 @@ def produce_data_alt(raw_image_pipe_in, time_control_pipe_in, filename):
     # call this when we stop using the camera
 
 
-def produce_data_samp(raw_input_queue, detection_queue, time_control_queue, filename):
+def produce_data_samp(raw_input_queue, detection_queue, time_control_queue, filename, resolution):
     if filename == "no_filename":
         cap = cv2.VideoCapture(0)
     else:
         cap = cv2.VideoCapture(filename)
+
+        cap.set(3, resolution[0])
+        cap.set(4, resolution[1])
 
     while True:
         process_start = time.time()
@@ -87,13 +100,12 @@ def produce_data_samp(raw_input_queue, detection_queue, time_control_queue, file
         raw_input_queue.put(img)
         detection_queue.put(img)
         log(time.asctime(), "produce_data_samp;", "Raw image has been captured and stored")
-        time.sleep(0.01)
+        # time.sleep(0.01)
 
         # Stop if escape key is pressed
         k = cv2.waitKey(1) & 0xff
         if k == 27:
             break
-
         process_duration = time.time() - process_start
         log_process_duration("produce_data_samp", process_duration)
 
